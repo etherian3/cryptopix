@@ -2,13 +2,13 @@ name: CI/CD Pipeline CryptoPixzl App
 
 on: 
   push:
-    branches: [main]
+    branches: [master]
     paths-ignore:
       - '.github/workflows/*'
       - 'kubernetes/*.yml'
       - 'kubernetes/*.yaml'
   pull_request:
-    branches: [main]
+    branches: [master]
 
 
 jobs:
