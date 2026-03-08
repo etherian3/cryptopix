@@ -63,7 +63,7 @@ jobs:
           - name: Upload Artifact
             uses: actions/upload-artifact@v4
             with:
-              name: Build Artifacts
+              name: build-artifacts
               path: dist/
 
 
@@ -83,7 +83,7 @@ jobs:
            - name: Download build artifacts
              uses: actions/download-artifact@v4
              with:
-                name: Build Artifacts
+                name: build-artifacts
                 path: dist/
 
            - name: Set up Docker Buildx
