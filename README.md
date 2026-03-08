@@ -29,11 +29,19 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/etherian3/crypto-pixzl.git
-cd crypto-pixzl
+git clone https://github.com/etherian3/cryptopix.git
+cd cryptopix
 
 # Install dependencies
 npm install
 
-# Run the application
+# Run the applicationa
 npm run dev
+
+# Build the application
+npm run build
+
+# Run the application in production mode
+npm run preview
+
+```
