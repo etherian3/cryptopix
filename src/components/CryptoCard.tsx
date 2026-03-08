@@ -12,9 +12,10 @@ interface CryptoCardProps {
 }
 
 const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite, isFavorite, isListView = false, showHeaders = false }) => {
-  const isPositive = coin.price_change_percentage_24h > 0;
+  const priceChange = coin.price_change_percentage_24h || 0;
+  const isPositive = priceChange > 0;
   const priceColor = isPositive ? 'text-pixel-green' : 'text-pixel-red';
-  
+
   if (isListView) {
     return (
       <>
@@ -31,17 +32,17 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
               <div className="col-span-3">
                 <span className="font-pixel text-[8px] md:text-xs text-muted-foreground uppercase">NAME</span>
               </div>
-              
+
               {/* Price Header */}
               <div className="col-span-2 text-left">
                 <span className="font-pixel text-[8px] md:text-xs text-muted-foreground uppercase">PRICE</span>
               </div>
-              
+
               {/* 24H Change Header - moved further to the right */}
               <div className="col-span-2 text-right">
                 <span className="font-pixel text-[8px] md:text-xs text-muted-foreground uppercase">24H %</span>
               </div>
-              
+
               {/* Market Cap Header - moved further right */}
               <div className="col-span-3 text-right">
                 <span className="font-pixel text-[8px] md:text-xs text-muted-foreground uppercase">MARKET CAP</span>
@@ -54,7 +55,7 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
           </div>
         )}
 
-        <div 
+        <div
           className="gradient-card hover:shadow-2xl cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:border-pixel-green/50 group border border-border/30 shadow-lg p-3 md:p-4 relative"
           onClick={() => onClick(coin.id)}
         >
@@ -64,8 +65,8 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
               {/* Left side - Coin info */}
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className="relative flex-shrink-0">
-                  <img 
-                    src={coin.image} 
+                  <img
+                    src={coin.image}
                     alt={coin.name}
                     className="w-8 h-8 rounded-full shadow-md"
                   />
@@ -80,52 +81,50 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
                   </p>
                 </div>
               </div>
-              
+
               {/* Right side - Rank and Favorite */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 <div className="font-pixel text-[8px] text-pixel-purple bg-pixel-purple/10 px-2 py-1 rounded-sm">
-                  #{coin.market_cap_rank}
+                  #{coin.market_cap_rank || '-'}
                 </div>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onToggleFavorite(coin.id);
                   }}
-                  className={`p-2 rounded-full transition-all duration-200 ${
-                    isFavorite 
-                      ? 'text-pixel-orange bg-pixel-orange/10' 
+                  className={`p-2 rounded-full transition-all duration-200 ${isFavorite
+                      ? 'text-pixel-orange bg-pixel-orange/10'
                       : 'text-muted-foreground hover:text-pixel-orange hover:bg-pixel-orange/10'
-                  }`}
+                    }`}
                 >
                   <Star size={12} className={`${isFavorite ? 'fill-current' : ''}`} />
                 </button>
               </div>
             </div>
-            
+
             {/* Price and Change Row */}
             <div className="flex items-center justify-between mb-2">
               <div>
                 <div className="font-pixel text-xs text-foreground font-bold mb-1">
-                  ${coin.current_price.toLocaleString()}
+                  ${(coin.current_price || 0).toLocaleString()}
                 </div>
                 <div className="font-pixel text-[9px] text-muted-foreground">
-                  ${(coin.market_cap / 1000000000).toFixed(2)}B cap
+                  ${((coin.market_cap || 0) / 1000000000).toFixed(2)}B cap
                 </div>
               </div>
-              
+
               <div className={`flex items-center gap-1 ${priceColor}`}>
                 {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                 <span className="font-pixel text-xs font-bold">
-                  {isPositive ? '+' : ''}{coin.price_change_percentage_24h.toFixed(2)}%
+                  {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
                 </span>
               </div>
             </div>
-            
+
             {/* Progress bar */}
-            <div className={`w-full h-1 rounded-full ${
-              isPositive ? 'bg-gradient-to-r from-transparent to-pixel-green' : 
-              'bg-gradient-to-r from-transparent to-pixel-red'
-            }`}></div>
+            <div className={`w-full h-1 rounded-full ${isPositive ? 'bg-gradient-to-r from-transparent to-pixel-green' :
+                'bg-gradient-to-r from-transparent to-pixel-red'
+              }`}></div>
           </div>
 
           {/* Tablet and Desktop Layout (>= 768px) */}
@@ -134,15 +133,15 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
               {/* Rank */}
               <div className="col-span-1 text-center">
                 <div className="font-pixel text-[8px] md:text-xs text-pixel-purple bg-pixel-purple/10 px-1 md:px-2 py-0.5 md:py-1 rounded-sm">
-                  #{coin.market_cap_rank}
+                  #{coin.market_cap_rank || '-'}
                 </div>
               </div>
 
               {/* Coin Info */}
               <div className="col-span-3 flex items-center gap-2 md:gap-3">
                 <div className="relative">
-                  <img 
-                    src={coin.image} 
+                  <img
+                    src={coin.image}
                     alt={coin.name}
                     className="w-6 h-6 md:w-8 md:h-8 rounded-full shadow-md"
                   />
@@ -157,28 +156,28 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
                   </p>
                 </div>
               </div>
-              
+
               {/* Price */}
               <div className="col-span-2 text-left">
                 <span className="font-pixel text-[10px] md:text-sm text-foreground font-bold">
-                  ${coin.current_price.toLocaleString()}
+                  ${(coin.current_price || 0).toLocaleString()}
                 </span>
               </div>
-              
+
               {/* 24H Change - moved further to the right with right alignment */}
               <div className="col-span-2 text-right">
                 <div className={`flex items-center justify-end gap-1 ${priceColor}`}>
                   {isPositive ? <TrendingUp size={8} className="md:w-3 md:h-3" /> : <TrendingDown size={8} className="md:w-3 md:h-3" />}
                   <span className="font-pixel text-[10px] md:text-sm font-bold">
-                    {isPositive ? '+' : ''}{coin.price_change_percentage_24h.toFixed(2)}%
+                    {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
                   </span>
                 </div>
               </div>
-              
+
               {/* Market Cap - moved further right and right-aligned */}
               <div className="col-span-3 text-right">
                 <span className="font-pixel text-[8px] md:text-xs text-foreground">
-                  ${(coin.market_cap / 1000000000).toFixed(2)}B
+                  ${((coin.market_cap || 0) / 1000000000).toFixed(2)}B
                 </span>
               </div>
 
@@ -189,11 +188,10 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
                     e.stopPropagation();
                     onToggleFavorite(coin.id);
                   }}
-                  className={`p-1 rounded-full transition-all duration-200 z-10 ${
-                    isFavorite 
-                      ? 'text-pixel-orange bg-pixel-orange/10' 
+                  className={`p-1 rounded-full transition-all duration-200 z-10 ${isFavorite
+                      ? 'text-pixel-orange bg-pixel-orange/10'
                       : 'text-muted-foreground hover:text-pixel-orange hover:bg-pixel-orange/10'
-                  }`}
+                    }`}
                 >
                   <Star size={10} className={`md:w-4 md:h-4 ${isFavorite ? 'fill-current' : ''}`} />
                 </button>
@@ -207,7 +205,7 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
 
   // Grid view (original card design) - keep existing code
   return (
-    <div 
+    <div
       className="gradient-card hover:shadow-2xl cursor-pointer transition-all duration-300 hover:scale-105 hover:border-pixel-green/50 group border border-border/30 shadow-lg p-3 md:p-6 relative"
       onClick={() => onClick(coin.id)}
     >
@@ -217,19 +215,18 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
           e.stopPropagation();
           onToggleFavorite(coin.id);
         }}
-        className={`absolute top-2 right-2 md:top-3 md:right-3 p-1 rounded-full transition-all duration-200 ${
-          isFavorite 
-            ? 'text-pixel-orange bg-pixel-orange/10' 
+        className={`absolute top-2 right-2 md:top-3 md:right-3 p-1 rounded-full transition-all duration-200 ${isFavorite
+            ? 'text-pixel-orange bg-pixel-orange/10'
             : 'text-muted-foreground hover:text-pixel-orange hover:bg-pixel-orange/10'
-        }`}
+          }`}
       >
         <Star size={12} className={`md:w-4 md:h-4 ${isFavorite ? 'fill-current' : ''}`} />
       </button>
 
       <div className="flex items-center gap-2 md:gap-4 mb-3 md:mb-6">
         <div className="relative">
-          <img 
-            src={coin.image} 
+          <img
+            src={coin.image}
             alt={coin.name}
             className="w-8 h-8 md:w-12 md:h-12 rounded-full shadow-md"
           />
@@ -245,41 +242,40 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ coin, onClick, onToggleFavorite
         </div>
         <div className="text-right">
           <div className="font-pixel text-[8px] md:text-xs text-pixel-purple bg-pixel-purple/10 px-1 md:px-2 py-0.5 md:py-1 rounded-sm">
-            #{coin.market_cap_rank}
+            #{coin.market_cap_rank || '-'}
           </div>
         </div>
       </div>
-      
+
       <div className="space-y-2 md:space-y-4">
         <div className="flex justify-between items-center py-1 md:py-2">
           <span className="font-pixel text-[10px] md:text-xs text-muted-foreground">PRICE</span>
           <span className="font-pixel text-xs md:text-sm text-foreground font-bold">
-            ${coin.current_price.toLocaleString()}
+            ${(coin.current_price || 0).toLocaleString()}
           </span>
         </div>
-        
+
         <div className="flex justify-between items-center py-1 md:py-2">
           <span className="font-pixel text-[10px] md:text-xs text-muted-foreground">24H CHANGE</span>
           <div className={`flex items-center gap-1 md:gap-2 ${priceColor}`}>
             {isPositive ? <TrendingUp size={10} className="md:w-3.5 md:h-3.5" /> : <TrendingDown size={10} className="md:w-3.5 md:h-3.5" />}
             <span className="font-pixel text-xs md:text-sm font-bold">
-              {isPositive ? '+' : ''}{coin.price_change_percentage_24h.toFixed(2)}%
+              {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
             </span>
           </div>
         </div>
-        
+
         <div className="flex justify-between items-center py-1 md:py-2">
           <span className="font-pixel text-[10px] md:text-xs text-muted-foreground">MARKET CAP</span>
           <span className="font-pixel text-[10px] md:text-xs text-foreground">
-            ${(coin.market_cap / 1000000000).toFixed(2)}B
+            ${((coin.market_cap || 0) / 1000000000).toFixed(2)}B
           </span>
         </div>
 
         <div className="pt-2 md:pt-3 border-t border-border/30">
-          <div className={`w-full h-1 md:h-2 rounded-full bg-muted ${
-            isPositive ? 'bg-gradient-to-r from-transparent to-pixel-green' : 
-            'bg-gradient-to-r from-transparent to-pixel-red'
-          }`}></div>
+          <div className={`w-full h-1 md:h-2 rounded-full bg-muted ${isPositive ? 'bg-gradient-to-r from-transparent to-pixel-green' :
+              'bg-gradient-to-r from-transparent to-pixel-red'
+            }`}></div>
         </div>
       </div>
     </div>

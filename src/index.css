@@ -1,9 +1,6 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 @layer base {
   :root {
@@ -84,49 +81,119 @@
 }
 
 @layer utilities {
-  .text-pixel-green { color: rgb(var(--pixel-green)); }
-  .text-pixel-blue { color: rgb(var(--pixel-blue)); }
-  .text-pixel-red { color: rgb(var(--pixel-red)); }
-  .text-pixel-purple { color: rgb(var(--pixel-purple)); }
-  .text-pixel-orange { color: rgb(var(--pixel-orange)); }
-  
-  .bg-pixel-green { background-color: rgb(var(--pixel-green)); }
-  .bg-pixel-blue { background-color: rgb(var(--pixel-blue)); }
-  .bg-pixel-red { background-color: rgb(var(--pixel-red)); }
-  .bg-pixel-purple { background-color: rgb(var(--pixel-purple)); }
-  .bg-pixel-orange { background-color: rgb(var(--pixel-orange)); }
+  .text-pixel-green {
+    color: rgb(var(--pixel-green));
+  }
 
-  .border-pixel-green { border-color: rgb(var(--pixel-green)); }
-  .border-pixel-blue { border-color: rgb(var(--pixel-blue)); }
-  .border-pixel-red { border-color: rgb(var(--pixel-red)); }
-  .border-pixel-purple { border-color: rgb(var(--pixel-purple)); }
-  .border-pixel-orange { border-color: rgb(var(--pixel-orange)); }
+  .text-pixel-blue {
+    color: rgb(var(--pixel-blue));
+  }
 
-  .border-pixel-green\/20 { border-color: rgb(var(--pixel-green) / 0.2); }
-  .border-pixel-green\/30 { border-color: rgb(var(--pixel-green) / 0.3); }
-  .border-pixel-green\/50 { border-color: rgb(var(--pixel-green) / 0.5); }
+  .text-pixel-red {
+    color: rgb(var(--pixel-red));
+  }
 
-  .bg-pixel-green\/10 { background-color: rgb(var(--pixel-green) / 0.1); }
-  .bg-pixel-green\/20 { background-color: rgb(var(--pixel-green) / 0.2); }
-  .bg-pixel-purple\/10 { background-color: rgb(var(--pixel-purple) / 0.1); }
-  .bg-pixel-orange\/10 { background-color: rgb(var(--pixel-orange) / 0.1); }
+  .text-pixel-purple {
+    color: rgb(var(--pixel-purple));
+  }
 
-  .ring-pixel-green\/20 { --tw-ring-color: rgb(var(--pixel-green) / 0.2); }
+  .text-pixel-orange {
+    color: rgb(var(--pixel-orange));
+  }
+
+  .bg-pixel-green {
+    background-color: rgb(var(--pixel-green));
+  }
+
+  .bg-pixel-blue {
+    background-color: rgb(var(--pixel-blue));
+  }
+
+  .bg-pixel-red {
+    background-color: rgb(var(--pixel-red));
+  }
+
+  .bg-pixel-purple {
+    background-color: rgb(var(--pixel-purple));
+  }
+
+  .bg-pixel-orange {
+    background-color: rgb(var(--pixel-orange));
+  }
+
+  .border-pixel-green {
+    border-color: rgb(var(--pixel-green));
+  }
+
+  .border-pixel-blue {
+    border-color: rgb(var(--pixel-blue));
+  }
+
+  .border-pixel-red {
+    border-color: rgb(var(--pixel-red));
+  }
+
+  .border-pixel-purple {
+    border-color: rgb(var(--pixel-purple));
+  }
+
+  .border-pixel-orange {
+    border-color: rgb(var(--pixel-orange));
+  }
+
+  .border-pixel-green\/20 {
+    border-color: rgb(var(--pixel-green) / 0.2);
+  }
+
+  .border-pixel-green\/30 {
+    border-color: rgb(var(--pixel-green) / 0.3);
+  }
+
+  .border-pixel-green\/50 {
+    border-color: rgb(var(--pixel-green) / 0.5);
+  }
+
+  .bg-pixel-green\/10 {
+    background-color: rgb(var(--pixel-green) / 0.1);
+  }
+
+  .bg-pixel-green\/20 {
+    background-color: rgb(var(--pixel-green) / 0.2);
+  }
+
+  .bg-pixel-purple\/10 {
+    background-color: rgb(var(--pixel-purple) / 0.1);
+  }
+
+  .bg-pixel-orange\/10 {
+    background-color: rgb(var(--pixel-orange) / 0.1);
+  }
+
+  .ring-pixel-green\/20 {
+    --tw-ring-color: rgb(var(--pixel-green) / 0.2);
+  }
 
   .animate-gradient-shift {
     animation: gradient-shift 3s ease-in-out infinite;
   }
 
   @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
   }
 
   /* Light mode specific utilities */
   .light\:text-pixel-blue {
     color: rgb(var(--pixel-blue));
   }
-  
+
   :not(.dark) .light\:text-pixel-blue {
     color: rgb(var(--pixel-blue));
   }
@@ -178,9 +245,7 @@
 
 @layer components {
   .pixel-button {
-    @apply font-pixel text-xs px-3 py-2 md:px-4 border-2 border-current bg-transparent 
-           hover:bg-current hover:text-background transition-all duration-200
-           active:translate-x-1 active:translate-y-1;
+    @apply font-pixel text-xs px-3 py-2 md:px-4 border-2 border-current bg-transparent hover:bg-current hover:text-background transition-all duration-200 active:translate-x-1 active:translate-y-1;
   }
 
   .pixel-card {
@@ -200,12 +265,12 @@
     .pixel-button {
       @apply text-[10px] px-2 py-1.5;
     }
-    
+
     .font-pixel {
       font-size: 0.8rem;
       line-height: 1.2;
     }
-    
+
     .mobile-compact {
       @apply px-2 py-2;
     }
