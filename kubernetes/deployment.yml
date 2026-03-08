@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: cryptopix
-        image: ghcr.io/etherian3/cryptopix:latest
+        image: ghcr.io/etherian3/cryptopix:sha-8bc252e07ac076a911b5bd30463101e1ee35607c
         # Image will be automatically updated by CI/CD pipeline
         imagePullPolicy: Always
         ports:
