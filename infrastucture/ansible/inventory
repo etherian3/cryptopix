@@ -1,0 +1,13 @@
+[masters]
+192.168.1.51
+
+[workers]
+192.168.1.52
+
+[k8s_cluster:children]
+masters
+workers
+
+[all:vars]
+ansible_user=user
+ansible_ssh_private_key_file=~/.ssh/id_rsa

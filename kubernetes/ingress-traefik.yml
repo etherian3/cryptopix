@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cryptopix
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: cryptopix.etherian.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cryptopix
+                port:
+                  number: 80

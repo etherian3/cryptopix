@@ -1,0 +1,113 @@
+---
+- name: Persiapan Dasar (Update dan Hostname)
+  hosts: all
+  become: true
+  tasks:
+    - name: Memastikan sistem APT terupdate (apt update && apt upgrade)
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Set Hostname untuk Master
+      hostname:
+        name: k3s-master
+      when: "'masters' in group_names"
+
+    - name: Set Hostname untuk Worker
+      hostname:
+        name: k3s-worker
+      when: "'workers' in group_names"
+
+- name: Setup K3s Master (Control Plane)
+  hosts: masters
+  become: true
+  tasks:
+    - name: Download dan Install K3s di Master
+      shell: curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /etc/rancher/k3s/k3s.yaml
+
+    - name: Tunggu hingga service K3s berjalan dengan baik
+      service:
+        name: k3s
+        state: started
+
+    - name: Ambil K3s Node Token untuk Worker
+      command: cat /var/lib/rancher/k3s/server/node-token
+      register: k3s_token
+      changed_when: false
+      failed_when: k3s_token.rc != 0
+
+    - name: Simpan Token di Ansible Facts
+      set_fact:
+        master_node_token: "{{ k3s_token.stdout }}"
+
+- name: Setup K3s Worker (Agent)
+  hosts: workers
+  become: true
+  tasks:
+    - name: Download dan Install K3s di Worker dengan Token Master
+      shell: 'curl -sfL https://get.k3s.io | K3S_URL=https://{{ groups["masters"][0] }}:6443 K3S_TOKEN={{ hostvars[groups["masters"][0]]["master_node_token"] }} sh -'
+      args:
+        creates: /etc/systemd/system/k3s-agent.service
+
+- name: Setup MetalLB dan Konfigurasi Load Balancer di Master
+  hosts: masters
+  become: true
+  tasks:
+    - name: Memastikan node worker sudah tergabung (kubectl get nodes -o wide)
+      command: kubectl get nodes -o wide
+      register: nodes_status
+      changed_when: false
+
+    - name: Tampilkan status Node Worker di Terminal
+      debug:
+        msg: "{{ nodes_status.stdout_lines }}"
+
+    - name: Install MetalLB menggunakan manifest resmi
+      command: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.3/config/manifests/metallb-native.yaml
+      
+    - name: Jeda sejenak untuk menunggu namespace MetalLB terbuat
+      pause:
+        seconds: 15
+
+    - name: Menunggu MetalLB Pods berjalan (Controller)
+      command: kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb,component=controller --timeout=120s
+      changed_when: false
+      ignore_errors: true
+
+    - name: Menunggu MetalLB Pods berjalan (Speaker)
+      command: kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb,component=speaker --timeout=120s
+      changed_when: false
+      ignore_errors: true
+
+    - name: Cek status resource di namespace metallb-system
+      command: kubectl get all -n metallb-system
+      register: metallb_status
+      changed_when: false
+
+    - name: Tampilkan status komponen MetalLB di Terminal
+      debug:
+        msg: "{{ metallb_status.stdout_lines }}"
+
+    - name: Buat file konfigurasi Custom Resource (CR) MetalLB
+      copy:
+        dest: /tmp/metallb-config.yaml
+        content: |
+          apiVersion: metallb.io/v1beta1
+          kind: IPAddressPool
+          metadata:
+            name: default-pool
+            namespace: metallb-system
+          spec:
+            addresses:
+            - 192.168.1.240-192.168.1.250
+          ---
+          apiVersion: metallb.io/v1beta1
+          kind: L2Advertisement
+          metadata:
+            name: default-l2
+            namespace: metallb-system
+
+    - name: Apply konfigurasi IP Address Pool & L2 Advertisement MetalLB
+      command: kubectl apply -f /tmp/metallb-config.yaml

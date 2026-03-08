@@ -1,0 +1,7 @@
+proxmox_token_secret = "PROXMOX-TOKEN-SECRET"
+proxmox_api_url      = "https://PROXMOX-IP/api2/json"
+proxmox_api_token_id = "root@pam!terraform"
+ci_user              = "user123"
+ci_password          = "password"
+ipconfig-control     = "ip=IP-ADDRESS/24,gw=192.168.1.1"
+ipconfig-worker      = "ip=IP-ADDRESS/24,gw=192.168.1.1"
